@@ -1,0 +1,300 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1700 1100" width="1700" height="1100"
+     font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+
+  <!-- ===========================================================================
+       SITE PLAN BUILDER — 11x17 LANDSCAPE SHEET TEMPLATE  (100 px = 1 inch)
+       ...........................................................................
+       GRID SYSTEM
+         Outer frame ......... 26px margin on all sides (frame: 26,26 → 1674,1074)
+         Map viewport ........ x 26  → 1332, y 26 → 906   (edge-to-edge, no header)
+         Legend band ......... x 26  → 1332, y 906 → 1042
+                               EXISTING (26 → 583) | PROPOSED (583 → 1140)
+                               | COUNTY locator tile (1168 → 1308)
+         Footer micro-band ... x 26  → 1332, y 1042 → 1074
+         Sidebar ............. x 1332 → 1674, y 26 → 1074 (content x 1358 → 1648)
+         Spatial block ....... sidebar bottom corner, y 1000 → 1074
+                               (north arrow + ratio + scale bar)
+       Zones share single hairline rules — no element owns its own closed box.
+
+       DATA BINDING
+         {PARCEL_NUMBER} {OWNER_NAME} {PROPERTY_ADDRESS} {ZONING} {ACREAGE}
+         {SETBACK_FRONT} {SETBACK_SIDE} {SETBACK_REAR}
+         {PROJECT_DESCRIPTION_LINE_1..7}   (renderer wraps text into line slots;
+                                            blank if shorter, truncate after 7)
+         {APPLICANT_NAME} {DATE} {SCALE_FEET_PER_INCH} {SCALE_QUARTER} {SCALE_HALF}
+         {SCALE_FEET}
+         {MAP_IMAGE_HREF} {INSET_IMAGE_HREF} {COUNTY_LOCATOR_HREF}
+         {BASEMAP_ATTRIBUTION}
+       Legend item groups are dynamic — renderer replaces the children of
+       #legend-existing-items / #legend-proposed-items (samples included below).
+       Capacity contract: each segment scales from the default 3x3 grid
+       (col pitch 175, row pitch 26) up to a 4x4 grid of 16 items
+       (col pitch 133, row pitch 24, rows y 948/972/996/1020); labels are
+       ellipsized to the column pitch. Entries beyond 16 are truncated with a
+       final "+ N more" item.
+
+       PALETTE
+         ink #1B1A17 · grey #6F6A60 · hairline #C9C4B8 · paper #FCFBF7
+         panel #F2F0E9 · accent (brand orange) #F0660D
+       =========================================================================== -->
+
+  <defs>
+    <clipPath id="map-clip">
+      <rect x="26" y="26" width="1306" height="880"/>
+    </clipPath>
+    <pattern id="swatch-hatch" width="6" height="6" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#6F6A60" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- ======================= SHEET BASE ======================= -->
+  <g id="sheet-base">
+    <rect id="paper" x="0" y="0" width="1700" height="1100" fill="#FCFBF7"/>
+    <rect id="sheet-frame" x="26" y="26" width="1648" height="1048"
+          fill="none" stroke="#1B1A17" stroke-width="1"/>
+  </g>
+
+  <!-- ======================= MAIN MAP VIEWPORT ======================= -->
+  <g id="site-map-viewport" clip-path="url(#map-clip)">
+    <rect x="26" y="26" width="1306" height="880" fill="#F2F0E9"/>
+    <text x="679" y="470" font-size="13" letter-spacing="2" text-anchor="middle"
+          fill="#6F6A60">MAIN MAP — {MAP_IMAGE_HREF}</text>
+    <image id="main-map-image" x="26" y="26" width="1306" height="880"
+           preserveAspectRatio="xMidYMid slice"
+           href="{MAP_IMAGE_HREF}" xlink:href="{MAP_IMAGE_HREF}"/>
+  </g>
+
+  <!-- Blueprint-style registration ticks, inset at the four map corners -->
+  <g id="map-corner-ticks" stroke="#1B1A17" stroke-width="1" opacity="0.7">
+    <path d="M 38 40 h 14 M 38 40 v 14" fill="none"/>
+    <path d="M 1320 40 h -14 M 1320 40 v 14" fill="none"/>
+    <path d="M 38 892 h 14 M 38 892 v -14" fill="none"/>
+    <path d="M 1320 892 h -14 M 1320 892 v -14" fill="none"/>
+  </g>
+
+  <!-- ======================= LEGEND BAND ======================= -->
+  <!-- EXISTING (26→583) | PROPOSED (583→1140) | COUNTY locator (1168→1308) -->
+  <g id="legend-layer">
+    <line x1="26" y1="906" x2="1332" y2="906" stroke="#1B1A17" stroke-width="0.75"/>
+    <line x1="583" y1="920" x2="583" y2="1028" stroke="#C9C4B8" stroke-width="0.75"/>
+    <line x1="1140" y1="920" x2="1140" y2="1028" stroke="#C9C4B8" stroke-width="0.75"/>
+
+    <g id="legend-existing">
+      <text x="50" y="934" font-size="9.5" font-weight="700" letter-spacing="2"
+            fill="#1B1A17">EXISTING</text>
+      <!-- Renderer replaces children: default 3x3 (pitch 175/26),
+           scales up to 4x4 = 16 items max (pitch 133/24); see header contract -->
+      <g id="legend-existing-items" font-size="9" fill="#1B1A17">
+        <rect x="50" y="950" width="18" height="12" fill="#E8E6E0"
+              stroke="#1B1A17" stroke-width="1"/>
+        <text x="76" y="959.5">Structure</text>
+        <circle cx="234" cy="956" r="6" fill="none" stroke="#1B1A17" stroke-width="1.2"/>
+        <circle cx="234" cy="956" r="2" fill="#1B1A17"/>
+        <text x="251" y="959.5">Well</text>
+        <rect x="400" y="950" width="18" height="12" fill="url(#swatch-hatch)"
+              stroke="#1B1A17" stroke-width="0.8"/>
+        <text x="426" y="959.5">Driveway</text>
+        <path d="M 50 982 h 18 M 53 976 v 6 M 59 976 v 6 M 65 976 v 6"
+              fill="none" stroke="#1B1A17" stroke-width="1.1"/>
+        <text x="76" y="985.5">Drainfield</text>
+      </g>
+    </g>
+
+    <g id="legend-proposed">
+      <text x="607" y="934" font-size="9.5" font-weight="700" letter-spacing="2"
+            fill="#F0660D">PROPOSED</text>
+      <!-- Renderer replaces children: default 3x3 (pitch 175/26),
+           scales up to 4x4 = 16 items max (pitch 133/24); see header contract -->
+      <g id="legend-proposed-items" font-size="9" fill="#1B1A17">
+        <rect x="607" y="950" width="18" height="12" fill="#E9EEE7"
+              stroke="#1B1A17" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="633" y="959.5">Septic tank</text>
+        <rect x="782" y="950" width="18" height="12" fill="none"
+              stroke="#1B1A17" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="808" y="959.5">Structure</text>
+      </g>
+    </g>
+
+    <!-- Transparent PNG capture (bare county outline + marker), no panel/frame -->
+    <g id="county-locator">
+      <image id="county-locator-image" x="1168" y="920" width="140" height="112"
+             preserveAspectRatio="xMidYMid slice"
+             href="{COUNTY_LOCATOR_HREF}" xlink:href="{COUNTY_LOCATOR_HREF}"/>
+    </g>
+  </g>
+
+  <!-- ======================= FOOTER MICRO-BAND ======================= -->
+  <g id="footer-band" fill="#6F6A60">
+    <line x1="26" y1="1042" x2="1332" y2="1042" stroke="#C9C4B8" stroke-width="0.6"/>
+    <text x="50" y="1060" font-size="6.5">{BASEMAP_ATTRIBUTION}</text>
+    <!-- Three footer cells (no dividers): attribution | county + agency |
+         address + contact (left-justified block ending at the band edge) -->
+    <text x="1127" y="1054" font-size="6.5" text-anchor="end">Walla Walla County</text>
+    <text x="1127" y="1064" font-size="6.5" text-anchor="end">Community Development</text>
+    <text x="1145" y="1054" font-size="6.5">310 W. Poplar Street, Suite 200 | Walla Walla, WA 99362</text>
+    <text x="1145" y="1064" font-size="6.5">Main: commdev@wwcowa.gov | 509-524-2610</text>
+  </g>
+
+  <!-- ======================= SIDEBAR ======================= -->
+  <g id="sidebar">
+    <line x1="1332" y1="26" x2="1332" y2="1074" stroke="#1B1A17" stroke-width="0.75"/>
+
+    <!-- ::Title block: square logo placeholder + two-line stacked title :: -->
+    <g id="title-block">
+      <g id="county-logo-placeholder">
+        <rect x="1358" y="52" width="68" height="68" fill="none"
+              stroke="#C9C4B8" stroke-width="0.75"/>
+        <circle cx="1392" cy="86" r="27" fill="none" stroke="#C9C4B8"
+                stroke-width="0.75" stroke-dasharray="3 3"/>
+        <!-- <image x="1358" y="52" width="68" height="68" href="{LOGO_IMAGE_HREF}"/> -->
+      </g>
+      <text x="1442" y="80" font-size="17" font-weight="700" letter-spacing="0.5"
+            fill="#1B1A17">WALLA WALLA COUNTY</text>
+      <text x="1442" y="103" font-size="17" font-weight="700" letter-spacing="0.5"
+            fill="#1B1A17">SITE PLAN</text>
+      <line x1="1358" y1="136" x2="1648" y2="136" stroke="#1B1A17" stroke-width="0.75"/>
+    </g>
+
+    <!-- ::Authorship row (directly beneath the header block) :: -->
+    <g id="prepared-block">
+      <text x="1358" y="158" font-size="8.5" letter-spacing="1.5" fill="#6F6A60">PREPARED BY</text>
+      <text x="1358" y="176" font-size="11" fill="#1B1A17">{APPLICANT_NAME}</text>
+      <text x="1648" y="158" font-size="8.5" letter-spacing="1.5" fill="#6F6A60"
+            text-anchor="end">DATE</text>
+      <text x="1648" y="176" font-size="11" fill="#1B1A17" text-anchor="end">{DATE}</text>
+      <line x1="1358" y1="196" x2="1648" y2="196" stroke="#1B1A17" stroke-width="0.75"/>
+    </g>
+
+    <!-- ::Parcel metadata grid (label left / value right, hairline rows) :: -->
+    <g id="parcel-metadata-grid">
+      <g font-size="8.5" letter-spacing="1.5" fill="#6F6A60">
+        <text x="1358" y="224">PARCEL NUMBER</text>
+        <text x="1358" y="260">OWNER</text>
+        <text x="1358" y="296">SITE ADDRESS</text>
+        <text x="1358" y="332">ZONING</text>
+        <text x="1358" y="368">AREA</text>
+      </g>
+      <g font-size="11" fill="#1B1A17" text-anchor="end">
+        <text x="1648" y="224">{PARCEL_NUMBER}</text>
+        <text x="1648" y="260">{OWNER_NAME}</text>
+        <text x="1648" y="296">{PROPERTY_ADDRESS}</text>
+        <text x="1648" y="332">{ZONING}</text>
+        <text x="1648" y="368">{ACREAGE} AC</text>
+      </g>
+      <g stroke="#C9C4B8" stroke-width="0.6">
+        <line x1="1358" y1="236" x2="1648" y2="236"/>
+        <line x1="1358" y1="272" x2="1648" y2="272"/>
+        <line x1="1358" y1="308" x2="1648" y2="308"/>
+        <line x1="1358" y1="344" x2="1648" y2="344"/>
+        <line x1="1358" y1="380" x2="1648" y2="380"/>
+      </g>
+    </g>
+
+    <!-- ::Setbacks: three-column dimension grid :: -->
+    <g id="setbacks-grid">
+      <text x="1358" y="408" font-size="9" font-weight="700" letter-spacing="2"
+            fill="#1B1A17">REQUIRED SETBACKS</text>
+      <g font-size="8.5" letter-spacing="1.5" fill="#6F6A60" text-anchor="middle">
+        <text x="1406" y="436">FRONT</text>
+        <text x="1503" y="436">SIDE</text>
+        <text x="1600" y="436">REAR</text>
+      </g>
+      <g font-size="11" fill="#1B1A17" text-anchor="middle">
+        <text x="1406" y="462">{SETBACK_FRONT}</text>
+        <text x="1503" y="462">{SETBACK_SIDE}</text>
+        <text x="1600" y="462">{SETBACK_REAR}</text>
+      </g>
+      <g stroke="#C9C4B8" stroke-width="0.75">
+        <line x1="1455" y1="420" x2="1455" y2="470"/>
+        <line x1="1551" y1="420" x2="1551" y2="470"/>
+      </g>
+      <line x1="1358" y1="488" x2="1648" y2="488" stroke="#1B1A17" stroke-width="0.75"/>
+    </g>
+
+    <!-- ::Project description (7 reserved line slots, 15px leading) :: -->
+    <g id="project-description">
+      <text x="1358" y="514" font-size="9" font-weight="700" letter-spacing="2"
+            fill="#1B1A17">PROJECT DESCRIPTION</text>
+      <g font-size="10" fill="#6F6A60">
+        <text x="1358" y="536">{PROJECT_DESCRIPTION_LINE_1}</text>
+        <text x="1358" y="551">{PROJECT_DESCRIPTION_LINE_2}</text>
+        <text x="1358" y="566">{PROJECT_DESCRIPTION_LINE_3}</text>
+        <text x="1358" y="581">{PROJECT_DESCRIPTION_LINE_4}</text>
+        <text x="1358" y="596">{PROJECT_DESCRIPTION_LINE_5}</text>
+        <text x="1358" y="611">{PROJECT_DESCRIPTION_LINE_6}</text>
+        <text x="1358" y="626">{PROJECT_DESCRIPTION_LINE_7}</text>
+      </g>
+      <line x1="1358" y1="640" x2="1648" y2="640" stroke="#1B1A17" stroke-width="0.75"/>
+    </g>
+
+    <!-- ::Vicinity map: full-width sidebar panel :: -->
+    <g id="locator-maps">
+      <rect x="1358" y="658" width="290" height="173" fill="#F2F0E9"
+            stroke="#C9C4B8" stroke-width="0.75"/>
+      <image id="vicinity-inset-image" x="1358" y="658" width="290" height="173"
+             preserveAspectRatio="xMidYMid slice"
+             href="{INSET_IMAGE_HREF}" xlink:href="{INSET_IMAGE_HREF}"/>
+      <line x1="1358" y1="843" x2="1648" y2="843" stroke="#1B1A17" stroke-width="0.75"/>
+    </g>
+
+    <!-- ::Legal disclaimer (heading + static copy; no tspans - svg2pdf stacks
+         sibling tspans at the parent x instead of flowing them) :: -->
+    <g id="legal-disclaimer">
+      <text x="1358" y="865" font-size="9" font-weight="700" letter-spacing="2"
+            fill="#1B1A17">DISCLAIMER</text>
+      <g font-size="10" fill="#6F6A60">
+        <text x="1358" y="882">This site plan is not a survey or engineered site plan and</text>
+        <text x="1358" y="895">should not be accepted or approved as a substitute for a</text>
+        <text x="1358" y="908">surveying or engineering document. Applicants are</text>
+        <text x="1358" y="921">responsible for determining whether a professionally</text>
+        <text x="1358" y="934">prepared survey, engineered plan, or other application</text>
+        <text x="1358" y="947">specific document is required. This does not guarantee</text>
+        <text x="1358" y="960">that a proposed development, site plan, permit application,</text>
+        <text x="1358" y="973">or land use application will be accepted, approved, or</text>
+        <text x="1358" y="986">deemed complete by Walla Walla County.</text>
+      </g>
+    </g>
+
+    <!-- ::Spatial reference block: north arrow + ratio + scale bar :: -->
+    <g id="spatial-reference-block">
+      <line x1="1358" y1="1000" x2="1648" y2="1000" stroke="#1B1A17" stroke-width="0.75"/>
+
+      <g id="north-arrow">
+        <circle cx="1382" cy="1040" r="18" fill="#FFFFFF" stroke="#1B1A17" stroke-width="1"/>
+        <polygon points="1382,1024 1388,1045 1382,1041 1376,1045" fill="#1B1A17"/>
+        <text x="1382" y="1054.5" font-size="7.5" font-weight="700" text-anchor="middle"
+              fill="#1B1A17">N</text>
+      </g>
+
+      <!-- Static template only: the renderer computes {SCALE_*} values and may
+           rescale the bar at PDF generation time. App-style hollow box
+           (mirrors js/ui/scale-bar.js): start x 1420, end x 1620 (200px max),
+           divisions at 25%/50% only, grey 25-50% segment, labels 0/25/50/100. -->
+      <g id="scale-bar">
+        <text id="scale-ratio-label" x="1420" y="1028" font-size="11" font-weight="700"
+              fill="#1B1A17">1" = {SCALE_FEET_PER_INCH}' (11" x 17")</text>
+        <g id="scale-bar-segments">
+          <rect x="1470" y="1034" width="50" height="10" fill="#E8E6E0"/>
+          <rect x="1420" y="1034" width="200" height="10"
+                fill="none" stroke="#1B1A17" stroke-width="0.75"/>
+          <line x1="1470" y1="1034" x2="1470" y2="1044"
+                stroke="#1B1A17" stroke-width="0.6"/>
+          <line x1="1520" y1="1034" x2="1520" y2="1044"
+                stroke="#1B1A17" stroke-width="0.6"/>
+        </g>
+        <text id="scale-label-zero" x="1420" y="1056" font-size="8.5"
+              text-anchor="start" fill="#6F6A60">0</text>
+        <text id="scale-label-quarter" x="1470" y="1056" font-size="8.5"
+              text-anchor="middle" fill="#6F6A60">{SCALE_QUARTER}</text>
+        <text id="scale-label-mid" x="1520" y="1056" font-size="8.5"
+              text-anchor="middle" fill="#6F6A60">{SCALE_HALF}</text>
+        <text id="scale-label-end" x="1620" y="1056" font-size="8.5"
+              text-anchor="end" fill="#6F6A60">{SCALE_FEET}</text>
+        <text id="scale-label-unit" x="1626" y="1056" font-size="8.5"
+              text-anchor="start" fill="#6F6A60">FT</text>
+      </g>
+    </g>
+  </g>
+</svg>

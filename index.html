@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site Plan Builder - Walla Walla County Community Development</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+  <script src="config.js"></script>
+  <script src="https://js.arcgis.com/4.30/"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="disclaimer-modal" role="dialog" aria-modal="true" aria-labelledby="disclaimer-modal-title" aria-hidden="true">
+  <div class="clear-modal-panel disclaimer-modal-panel">
+    <div class="disclaimer-brand-header">
+      <div class="disclaimer-brand-seal" aria-hidden="true">
+        <img id="disclaimer-header-seal-img" alt="" />
+      </div>
+      <div class="disclaimer-brand-title" id="disclaimer-modal-title">
+        <div>Walla Walla County</div>
+        <div>Community Development</div>
+        <div class="disclaimer-brand-subtitle">Site Plan Builder</div>
+      </div>
+    </div>
+    <div class="clear-modal-body disclaimer-modal-body">
+      <div class="disclaimer-modal-heading">Disclaimer and Terms of Use</div>
+      <p>
+        The site plan produced by this tool is <strong class="disclaimer-warning-text">not a survey or engineered site plan</strong> and shall not be accepted or approved as a
+        substitute for a surveying or engineering document. Applicants are responsible for determining whether a professionally
+        prepared survey, engineered plan, or other application-specific document is required. Use of this tool does not guarantee
+        that a proposed development, site plan, permit application, or land use application will be accepted, approved, or deemed
+        complete by Walla Walla County.
+      </p>
+      <p>
+        All data is provided by Walla Walla County "AS IS," without warranty of any kind, express or implied, as to the accuracy or
+        completeness of the information. Inaccuracies may result from, but are not limited to, differences in map projection,
+        scale, resolution, or other methods by which GIS layers are maintained, transformed, or displayed. Parcels shown in this
+        tool are not necessarily representative of legal lots of record. The presence or absence of mapped critical areas, site
+        constraints, or other features does not constitute a formal determination by Walla Walla County. Additional review or
+        information may be required prior to development.
+      </p>
+      <p>
+        With knowledge of the foregoing, by proceeding to use the County's GIS data and this Site Plan Builder, each user agrees to
+        waive, release, and indemnify Walla Walla County, its agents, consultants, contractors, and employees from any and all
+        claims, actions, or causes of action for damages or injury to persons or property arising from the use of, reliance on, or
+        inability to use Walla Walla County's GIS data, maps, measurements, or site plan output.
+      </p>
+      <p>
+        Walla Walla County will not be responsible for any data distributed by others. The release of data to the requestor does
+        not authorize the party to redistribute, resell, or act as an agent for any data received from the County.
+      </p>
+    </div>
+    <div class="clear-modal-actions disclaimer-modal-actions">
+      <label class="disclaimer-agree-row" for="disclaimer-agree">
+        <input type="checkbox" id="disclaimer-agree">
+        <span>I understand and agree to the above terms and conditions</span>
+      </label>
+      <button type="button" class="clear-modal-btn disclaimer-continue-btn" id="disclaimer-continue" disabled>Continue</button>
+    </div>
+  </div>
+</div>
+<div id="clear-modal" role="dialog" aria-modal="true" aria-labelledby="clear-modal-title" aria-hidden="true" onclick="if(event.target===this) closeClearAllModal();">
+  <div class="clear-modal-panel">
+    <div class="clear-modal-header" id="clear-modal-title">Clear all drawings?</div>
+    <div class="clear-modal-body">
+      This will remove every drawing from the map. This action cannot be undone.
+    </div>
+    <div class="clear-modal-actions">
+      <button type="button" class="clear-modal-btn cancel" onclick="closeClearAllModal()">Cancel</button>
+      <button type="button" class="clear-modal-btn danger" onclick="confirmClearAllModal()">Clear Map</button>
+    </div>
+  </div>
+</div>
+<div id="app">
+  <header role="banner">
+    <div id="header">
+      <h1 class="sr-only">Walla Walla County Community Development - Site Plan Builder</h1>
+      <div id="header-seal" aria-hidden="true">
+        <img id="seal-img" src="https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg" alt="Walla Walla County Seal">
+      </div>
+      <div id="titlewrap">
+        <div id="agency"></div>
+        <div id="title"></div>
+      </div>
+      <div id="header-search-wrap" aria-label="Parcel search">
+        <div id="header-search"></div>
+      </div>
+      <button class="hdr-btn light clear-all-btn" onclick="clearAll()" title="Clear all drawn site plan items" aria-label="Clear all drawn site plan items">
+        <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+          <!-- Icon from Gravity UI Icons by YANDEX LLC - https://github.com/gravity-ui/icons/blob/main/LICENSE -->
+          <path fill="currentColor" fill-rule="evenodd" d="M9 2H7a.5.5 0 0 0-.5.5V3h3v-.5A.5.5 0 0 0 9 2m2 1v-.5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2V3H2.251a.75.75 0 0 0 0 1.5h.312l.317 7.625A3 3 0 0 0 5.878 15h4.245a3 3 0 0 0 2.997-2.875l.318-7.625h.312a.75.75 0 0 0 0-1.5zm.936 1.5H4.064l.315 7.562A1.5 1.5 0 0 0 5.878 13.5h4.245a1.5 1.5 0 0 0 1.498-1.438zm-6.186 2v5a.75.75 0 0 0 1.5 0v-5a.75.75 0 0 0-1.5 0m3.75-.75a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75" clip-rule="evenodd"></path>
+        </svg>
+        Clear Drawings
+      </button>
+      <button class="hdr-btn gold" onclick="printPlan()" aria-label="Print or save PDF of site plan" title="Print / Save PDF">
+        <svg width="15" height="15" viewBox="0 0 100 100" aria-hidden="true"><!-- Icon from Font-GIS by Jean-Marc Viglino - https://github.com/Viglino/font-gis/blob/main/LICENSE-CC-BY.md --><path fill="currentColor" d="M14.643 2a2.5 2.5 0 0 0-2.5 2.5v19.514c1.666-.003 3.333-.01 5-.01V7h58v16.992l5-.002V4.5a2.5 2.5 0 0 0-2.5-2.5ZM6.5 28A6.486 6.486 0 0 0 0 34.5v27C0 65.101 2.899 68 6.5 68h5.643v27.5a2.5 2.5 0 0 0 2.5 2.5h63a2.5 2.5 0 0 0 2.5-2.5V68H93.5c3.601 0 6.5-2.899 6.5-6.5v-27c0-3.601-2.899-6.5-6.5-6.5Zm83.44 6H90a4 4 0 1 1-.06 0M17.142 48h4v41h51V48h4v45h-59zm11.793 0H40.37c-.203.636-.477 1.422-1.14 1.518c2.29.285-.81 1.091-1.196 2.136c.783.04 1.214-1.733 2.154-.332c-.329 1.29-.735-1.108-1.355.711c-1.493 1.03 1.642 2.73 1.623 2.75c-.659-1.463-.534-2.64.543-3.086c.612-1.193.001-2.25.316-3.697h11.688c.43.28.862.572 1.307.871c1.425 2.418-2.797 3.254-4.332 2.871c-1.06.141-2.522.705-3.116 1.106c-.343 1.543.379 4.351-2.164 4.666c-1.999.655-3.58-3.007-4.959-1.575c-2.039 1.023-.66-3.026-2.373-.908c-.576-.085-1.076-2.063-.678.108c-.598.126-2.075-.619-.501.517c-.2 1.441-1.632-.77-2.377-.738c.735-.716 3.633-.775 1.654-2.285c-1.234.326-1.594-.726-.2-.5c.767-1.771-1.313-1.877-1.88-2.791c.224 1.27-1.629.801-2.278.156c.3 1.596 2.657.865 3.73 1.797c1.246 1.415-2.089.13-.712 1.682c-2.077.936-3.765-1.782-5.467-2.8c-.612-1.092-.235-1.573.278-2.177m4.449 1.342a2 2 0 0 0-.145-.488a.9.9 0 0 0 .145.488M65.95 48h1.483l1.996 10.74c-1.856-.972-2.508-3.253-3.594-4.535c1.39-1.22-.311-3.11.666-4.64c-.26-.63-.458-1.112-.55-1.565m-42.416 1.375c1.379.762-1.266 1.418 0 0m10.707.29c-.748.254.385.23 0 0m-10.963.855c1.647.303 1.085 1.137-.058 1.12c.012-.362-.11-.774.058-1.12m10.899.003c.997.37-.464.448 0 0m4.926 1.793c1.984.479-1.612.272 0 0m-7.87 4.414c2.073 1.034-.568 2.966-.486 1.543c.3-.563-.762-1.35.486-1.543m10.791.04c.46.168-.302.227 0 0m.09.263c.445.242-.454.777 0 0m-18.023.422c.724.869 2.276-.313 2.187.732c.954-1 .342 1.712.916.004c.766.104-.69 1.135.705-.011c1.218-.287.413.557 1.18.185c1.06 1.763 2.088 3.76 4.32 3.84c-.117 2.035-3.219 2.168-4.492 1.723c.82 1.263-.633.083-.615.082c-.212 1.198-3.077.156-3.482 2.02c.892 1.226-.911 1.571-1.227 1.49c-.846-.112-.169-3.897-.39-5.327c.29-1.482-.723-4.341.898-4.738m.65.379c-1.024.035.191.722 0 0m24.19 2.978c2.527.523 3.61 2.427 5.73 3.702c.669.656 1.283 1.91 2.246 2.017c.868.362 2.197 1.184 3.127.022c.83 1.629-1.98 2.31-2.728 1.742c-1.775.188-4.01-.804-6.051-.615c-.968 1.326-2.987 2.753-4.467 1.316c-1.206.7-2.03 3.372-2.83 5.143c-.807.161-3.77 2.752-1.523 1.213c1.783-.903-.69 1.09-1.399 1.275c-1.152 1.789-3.65.866-4.978 2.025c-1.468.363-3.191 2.82-2.653 3.534c.561 1.105-.638.987.64 1.209c-.024-.7 1.03.456.313.447c1.022.658 1.239 2.729.118.683c-.751-.822-1.361 2.906-2.55.418c-.127.182-1.273 2.03-1.241.342c.068-.725-1.37 1.547-1.663-.031c-2.038-1.323.32-3.705.215-5.412c-1.017-1.663-.174-1.41-.101-2.918c.99-1.227.756-2.247.59-3.906c-1.707.521.432-1.49-1.233-.42c-.814-.132-3.256-.186-1.812-1.194c1.115 1.118 2.472.081 3.039-.521c1.277-.305-1.411-.687-1.35.355c-2.87.65-1.855-2.893-.096-3.752c1.12-.586 1.558-1.146 2.71-1.468c.704.509-.571 1.3.855.408c1.657-.104-.083 2.046-.55 2.64c-.187-1.732-2.92-.426-2.165.795c1.508-.683 1.748 1.285 2.805-.459c.466.912-.358 1.482-.448 1.354c1.535 2.637 3.27.63 3.907-.97c1.976-.718-1.464-.72-1.877-.743c-2.506.477-.227-1.963.3-2.19c-1.572-.748 1.75-1.108 1.965-2.134c.702.487 1.938-1.422 1.801.142c.175 1.283-2.078-.293-.719 1.065c-.174 1.181-.1.739.82.119c-.028-1.38.928.953.778 1.33c1.162.538 2.635 2.405 4.346 2.236c-2.045.366-.93 4.26 1.097 2.758c.349-.841-1.433-2.215.586-1.45c.59-1.215 2.075-1.463.928-3.357c-.07-1.945 1.47-3.228 2.27-4.498c.557-.634.322-2.019 1.248-2.252m14.373 4.096c1.71 1.535 4.266.1 6.039.785c.365 2.545.095 5.232.174 7.838c-1.42.557-2.582-.157-1.58-1.681c-.272-1.26.643-3.78-.106-3.79c-.373.712-2.145.454-1.777-.77c-1.007-.361-2.83-.957-2.75-2.382M44.129 66.66c.478.48-.47.538 0 0m-.04.473c.897 1.154-1.216.894 0 0m-.093.855c.45.454-.833 1.274-.531 2.381c-.932-.419.018-2.03.531-2.38m-.443.082c.341.218-.257.17 0 0m-.328.09c.522.162-.419.49 0 0m-13.223.299c1.1.654-.98.43 0 0m-6.703.064c1.07.765 1.902.632 1.455 2.475c.606.65.16-3.064 1.322-1.18c.6 1.824-1.087 2.245-1.998 2.787c.594-1.16.145-1.708-.748-1.959c-.107-.68-.275-1.456-.031-2.123m20.87.15c.42.856-.556.366 0 0m-1.66.17c.383.285-.603.64 0 0m.339.089c.45.337-.596.193 0 0m-10.368.316c.896.01-.182.627 0 0m-.226.49c.966.431-.182.772 0 0m6.03.047c-1.113.413.65.13 0 0m-.83.604c-.642 1.097.569 1.478 0 0m-13.88 1.492c.606 1.155-1.154 1.124 0 0m2.22.056c.72 1.065-1.635.27 0 0m1.462.522a1 1 0 0 1 .316.03c1.416.455-.743 1.612-.638.911c-1.187-.06-.431-.888.322-.941m-2.586.236c.105-.013.242-.01.42.012c1.388.124-.203 1.143-.627 1.397c.305-.455-.53-1.318.207-1.409m-1.342.266c.713 1.209-.703.958 0 0m5.549.336c1.469.415.607 3.862-.28 2.935c-.672 1.034-1.458.185-.312 1.416c-1.518 1.516-3.494-.77-1.28-1.865c.623-.857-1.47-1.915.7-1.695c.682.119.694-.609 1.172-.791m-3.277.555c.96 1.417-.179 3.487-.909 2.798c1.295 2.366-2.733-1.215-.058-.273c-.506-.616 1.375-1.554-.313-1.287c-.028-.548 1.206-.89 1.28-1.238m43.863.185c-.006 1.75.208 5.813-.115 5.99c-.809-1.515-1.024-2.604-.448-4.248c1.257-1.025-.46-1.338.563-1.742m-46.217 1.025c1.541.175-.624 2.006 0 0m7.65 1.622c-.77.69 1.15 1.076 0 0m4.844 2.441c.1-.008.223-.002.371.027c-.672.842-1.074.032-.37-.027m8.186 4.447c.204.744-1.27 1.053 0 0m-.526.858c.308.22-.308.22 0 0m-10.046 1.213c.629.522-.588.508 0 0m2.12.043c.67.592-.438.348 0 0"></path></svg>
+        Print / Save PDF
+      </button>
+    </div>
+  </header>
+
+  <main role="main">
+    <div id="main">
+      <aside id="sidebar" aria-label="Site plan tools">
+        <div class="tool-section">
+          <div class="section-head">Editing</div>
+          <div id="tools-editing" class="section-body tool-section-body editing-core-body">
+            <div class="edit-mode-row" role="group" aria-label="Object editing mode">
+              <button type="button" class="tool-btn edit-mode-btn" id="edit-mode-reshape" aria-pressed="false" title="Reshape / edit points" onclick="setEditMode('reshape')">Reshape (Edit points)</button>
+              <button type="button" class="tool-btn edit-mode-btn active" id="edit-mode-resize" aria-pressed="true" title="Resize or rotate object" onclick="setEditMode('resize')">Resize / Rotate</button>
+            </div>
+            <label class="toggle-row" for="snap-toggle" title="Toggle snapping while drawing and editing">
+              <input type="checkbox" id="snap-toggle" checked onchange="toggleSnapping(this.checked)" />
+              <span>Snapping on</span>
+            </label>
+            <label class="toggle-row" for="rotation-guides-toggle" title="Show rotation guides and snap eligible objects to clean angles">
+              <input type="checkbox" id="rotation-guides-toggle" checked onchange="toggleRotationGuides(this.checked)" />
+              <span>Rotation guides</span>
+            </label>
+          </div>
+        </div>
+        <div class="tool-section">
+          <div class="section-head" data-drawing-mode-category="structure">Structures</div>
+          <div id="tools-structures" class="section-body tool-section-body"></div>
+        </div>
+        <div class="tool-section">
+          <div class="section-head" data-drawing-mode-category="well-septic">Well &amp; Septic</div>
+          <div id="tools-well-septic" class="section-body tool-section-body"></div>
+        </div>
+        <div class="tool-section">
+          <div class="section-head" data-drawing-mode-category="access">Access</div>
+          <div id="tools-access" class="section-body tool-section-body"></div>
+        </div>
+        <div class="tool-section">
+          <div class="section-head" data-drawing-mode-category="utilities">Utilities</div>
+          <div id="tools-utilities" class="section-body tool-section-body"></div>
+        </div>
+        <div class="tool-section">
+          <div class="section-head" data-drawing-mode-category="parking">Parking</div>
+          <div id="tools-parking" class="section-body tool-section-body"></div>
+        </div>
+        <div class="tool-section">
+          <div class="section-head" data-drawing-mode-category="draw">Draw Tools</div>
+          <div id="tools-draw" class="section-body tool-section-body"></div>
+        </div>
+      </aside>
+
+      <div id="map-wrap">
+        <div id="viewDiv"></div>
+
+        <div id="basemap-toggle">
+          <div id="basemap-control" class="map-control">
+            <button class="bm-btn control-toggle active" id="bm-basemap" type="button" onclick="toggleBasemapPanel(true)" title="Basemap">
+              <span class="bm-thumb-wrap" id="bm-current-thumb" aria-hidden="true">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" fill="#f0ede7"/><line x1="0" y1="32" x2="64" y2="32" stroke="#ccc9c2" stroke-width="2.5"/><line x1="32" y1="0" x2="32" y2="64" stroke="#ccc9c2" stroke-width="1.5"/></svg>
+              </span>
+              <span class="bm-label" id="bm-current-label">Basemap</span>
+            </button>
+            <div id="basemap-panel" class="map-panel basemap-panel-strip" onclick="event.stopPropagation();">
+              <button type="button" class="basemap-collapse-btn" onclick="toggleBasemapPanel(false)" title="Collapse basemaps" aria-label="Collapse basemap options">&rsaquo;</button>
+              <button type="button" class="basemap-option strip-option" id="bm-option-streets" onclick="switchBasemap('streets-vector', this)" title="Streets">
+                <svg class="bm-thumb" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="64" height="64" fill="#e8e0d0"/><rect x="0" y="28" width="64" height="8" fill="#fff" opacity=".7"/><rect x="24" y="0" width="6" height="64" fill="#fff" opacity=".5"/><circle cx="32" cy="22" r="6" fill="#c0392b" opacity=".7"/></svg>
+                <span class="bm-label">Streets</span>
+              </button>
+              <button type="button" class="basemap-option strip-option" id="bm-option-topo" onclick="switchBasemap('topo-vector', this)" title="Topo">
+                <svg class="bm-thumb" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="64" height="64" fill="#f0ebe0"/><ellipse cx="32" cy="36" rx="26" ry="16" fill="none" stroke="#b8a882" stroke-width="1.5"/><ellipse cx="32" cy="36" rx="18" ry="10" fill="none" stroke="#b8a882" stroke-width="1.5"/><ellipse cx="32" cy="36" rx="10" ry="5" fill="none" stroke="#b8a882" stroke-width="1.5"/></svg>
+                <span class="bm-label">Topo</span>
+              </button>
+              <button type="button" class="basemap-option strip-option active" id="bm-option-gray" onclick="switchBasemap('gray-vector', this)" title="Gray Canvas">
+                <svg class="bm-thumb" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="64" height="64" fill="#f0ede7"/><line x1="0" y1="32" x2="64" y2="32" stroke="#ccc9c2" stroke-width="2.5"/><line x1="32" y1="0" x2="32" y2="64" stroke="#ccc9c2" stroke-width="1.5"/><line x1="0" y1="20" x2="64" y2="20" stroke="#ccc9c2" stroke-width="1"/><line x1="0" y1="48" x2="64" y2="48" stroke="#ccc9c2" stroke-width="1"/></svg>
+                <span class="bm-label">Gray Canvas</span>
+              </button>
+              <button type="button" class="basemap-option strip-option" id="bm-option-imagery" onclick="switchBasemap('satellite', this)" title="Imagery">
+                <svg class="bm-thumb" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="64" height="64" fill="#2d4a1e"/><rect x="0" y="0" width="32" height="32" fill="#3a5c28" opacity=".8"/><rect x="32" y="32" width="32" height="32" fill="#3a5c28" opacity=".8"/><path d="M0 40 Q16 30 32 38 Q48 46 64 36" fill="none" stroke="#5b8cd4" stroke-width="2" opacity=".7"/></svg>
+                <span class="bm-label">Imagery</span>
+                <span class="basemap-print-note" role="tooltip">Prints as Gray Canvas</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="layer-control" class="map-control">
+            <button class="bm-btn control-toggle" id="bm-layers" type="button" onclick="toggleLayerPanel()" title="Map layers">
+              <svg class="bm-thumb bm-gis-layer-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><!-- Icon from Font-GIS by Jean-Marc Viglino - https://github.com/Viglino/font-gis/blob/main/LICENSE-CC-BY.md --><rect width="100" height="100" fill="#FEFDF9"></rect><path fill="currentColor" d="M80.5 0c-7.145 0-13.252 4.246-15.977 10.357H28.135a3.5 3.5 0 0 0-2.668 1.235L.832 40.607c-1.93 2.275-.313 5.767 2.67 5.766l93-.064c2.981-.003 4.595-3.493 2.666-5.766l-7.87-9.272A17.43 17.43 0 0 0 98 17.5C98 7.805 90.195 0 80.5 0M77 5h7v9h9v7h-9v9h-7v-9h-9v-7h9zM29.754 17.357h33.254c0 .048-.008.095-.008.143C63 27.195 70.805 35 80.5 35c1.492 0 2.93-.205 4.31-.553l4.131 4.867l-77.873.053zM89.91 51.313l-9.178.007l8.211 9.67l-77.875.053l8.22-9.682l-9.188.008L.832 62.283c-1.93 2.275-.313 5.767 2.67 5.766l93-.065c2.981-.002 4.595-3.492 2.666-5.765zm0 21.593l-9.178.008l8.211 9.67l-77.875.053l8.22-9.682l-9.188.008L.832 83.877c-1.93 2.274-.313 5.767 2.67 5.766l93-.065c2.981-.002 4.595-3.493 2.666-5.766z"></path></svg>
+              <span class="bm-label">Layers</span>
+            </button>
+            <div id="layers-panel" class="map-panel" onclick="event.stopPropagation();">
+              <div class="map-panel-head" onclick="toggleLayerPanel(false)" title="Collapse layers"><span>Layers</span><span aria-hidden="true">&rsaquo;</span></div>
+              <div class="map-panel-body">
+                <label class="layer-check-row" for="liquefaction-toggle"><input type="checkbox" id="liquefaction-toggle" onchange="toggleMapLayer('liquefaction', this.checked)" /><span>Liquefaction Susceptibility</span></label>
+                <label class="layer-check-row" for="riparian-toggle"><input type="checkbox" id="riparian-toggle" onchange="toggleMapLayer('riparian', this.checked)" /><span>Riparian Buffer</span></label>
+                <label class="layer-check-row" for="wetlands-toggle"><input type="checkbox" id="wetlands-toggle" onchange="toggleMapLayer('wetlands', this.checked)" /><span>Wetlands</span></label>
+                <label class="layer-check-row" for="cara-toggle"><input type="checkbox" id="cara-toggle" onchange="toggleMapLayer('cara', this.checked)" /><span>Critical Aquifer Recharge Area (CARA)</span></label>
+                <label class="layer-check-row" for="flood-toggle"><input type="checkbox" id="flood-toggle" onchange="toggleMapLayer('flood', this.checked)" /><span>Flood Hazard Areas</span></label>
+                <label class="layer-check-row" for="contours-toggle"><input type="checkbox" id="contours-toggle" onchange="toggleMapLayer('contours', this.checked)" /><span>Contours</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="selection-toolbar" aria-label="Selected drawing actions">
+          <button type="button" id="btn-duplicate-tool" class="selection-tool-btn duplicate" onclick="duplicateSelectedGraphic()" title="Duplicate selected item" aria-label="Duplicate selected item">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><!-- Icon from Gravity UI Icons by YANDEX LLC - https://github.com/gravity-ui/icons/blob/main/LICENSE --><path fill="currentColor" fill-rule="evenodd" d="M12 2.5H8A1.5 1.5 0 0 0 6.5 4v1H8a3 3 0 0 1 3 3v1.5h1A1.5 1.5 0 0 0 13.5 8V4A1.5 1.5 0 0 0 12 2.5M11 11h1a3 3 0 0 0 3-3V4a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v1H4a3 3 0 0 0-3 3v4a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3zM4 6.5h4A1.5 1.5 0 0 1 9.5 8v4A1.5 1.5 0 0 1 8 13.5H4A1.5 1.5 0 0 1 2.5 12V8A1.5 1.5 0 0 1 4 6.5" clip-rule="evenodd"></path></svg>
+          </button>
+          <button type="button" id="rotate-ccw-tool" class="selection-tool-btn rotation-step-btn" onclick="rotateSelectedBy(45)" title="Rotate counterclockwise 45 degrees" aria-label="Rotate selected item counterclockwise 45 degrees"><svg viewBox="0 0 16 16" aria-hidden="true"><!-- Icon from Gravity UI Icons by YANDEX LLC - https://github.com/gravity-ui/icons/blob/main/LICENSE --><path fill="currentColor" fill-rule="evenodd" d="M2.47 4.72a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06L4.81 6H9a3.25 3.25 0 0 1 0 6.5H8A.75.75 0 0 0 8 14h1a4.75 4.75 0 1 0 0-9.5H4.81l1.72-1.72a.75.75 0 0 0-1.06-1.06z" clip-rule="evenodd"></path></svg></button>
+          <button type="button" id="rotate-cw-tool" class="selection-tool-btn rotation-step-btn" onclick="rotateSelectedBy(-45)" title="Rotate clockwise 45 degrees" aria-label="Rotate selected item clockwise 45 degrees"><svg viewBox="0 0 16 16" aria-hidden="true"><!-- Icon from Gravity UI Icons by YANDEX LLC - https://github.com/gravity-ui/icons/blob/main/LICENSE --><path fill="currentColor" fill-rule="evenodd" d="M13.53 4.72a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06L11.19 6H7a3.25 3.25 0 0 0 0 6.5h1A.75.75 0 0 1 8 14H7a4.75 4.75 0 1 1 0-9.5h4.19L9.47 2.78a.75.75 0 0 1 1.06-1.06z" clip-rule="evenodd"></path></svg></button>
+          <button type="button" id="btn-label-tool" class="selection-tool-btn label-tool" onclick="openLabelEditor()" title="Add or edit label" aria-label="Add or edit label"><svg viewBox="0 0 16 16" aria-hidden="true"><!-- Icon from Gravity UI Icons by YANDEX LLC - https://github.com/gravity-ui/icons/blob/main/LICENSE --><path fill="currentColor" fill-rule="evenodd" d="M3.279 2.544A.75.75 0 0 1 4 2h8a.75.75 0 0 1 .721.544l.5 1.75a.75.75 0 1 1-1.442.412L11.434 3.5H8.75l-.004 9H9.5a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.746l.004-9H4.566L4.22 4.706a.75.75 0 1 1-1.442-.412z" clip-rule="evenodd"></path></svg></button>
+          <button type="button" id="btn-delete-tool" class="selection-tool-btn delete" onclick="deleteSelected()" title="Delete selected item" aria-label="Delete selected item">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><!-- Icon from Gravity UI Icons by YANDEX LLC - https://github.com/gravity-ui/icons/blob/main/LICENSE --><path fill="currentColor" fill-rule="evenodd" d="M9 2H7a.5.5 0 0 0-.5.5V3h3v-.5A.5.5 0 0 0 9 2m2 1v-.5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2V3H2.251a.75.75 0 0 0 0 1.5h.312l.317 7.625A3 3 0 0 0 5.878 15h4.245a3 3 0 0 0 2.997-2.875l.318-7.625h.312a.75.75 0 0 0 0-1.5zm.936 1.5H4.064l.315 7.562A1.5 1.5 0 0 0 5.878 13.5h4.245a1.5 1.5 0 0 0 1.498-1.438zm-6.186 2v5a.75.75 0 0 0 1.5 0v-5a.75.75 0 0 0-1.5 0m3.75-.75a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75" clip-rule="evenodd"></path></svg>
+          </button>
+          <div id="label-edit-form" role="group" aria-label="Edit label">
+            <div class="label-input-wrap">
+              <input type="text" id="label-edit-input" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Label..." aria-label="Label text" />
+              <button type="button" id="label-edit-clear" class="label-edit-clear" title="Clear label text" aria-label="Clear label text">&times;</button>
+            </div>
+            <button type="button" id="label-edit-confirm" class="selection-tool-btn label-edit-confirm" title="Confirm" aria-label="Confirm label"><svg viewBox="0 0 16 16" aria-hidden="true"><!-- Icon from HeroIcons by Refactoring UI Inc - https://github.com/tailwindlabs/heroicons/blob/master/LICENSE --><path fill="currentColor" fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353l4.493-6.74a.75.75 0 0 1 1.04-.207" clip-rule="evenodd"></path></svg></button>
+          </div>
+        </div>
+
+        <div id="selected-shape-box" aria-live="polite" aria-hidden="true">
+          <div class="ssb-head">SELECTED SHAPE</div>
+          <div class="ssb-value" id="ssb-value">-</div>
+        </div>
+
+        <div id="loading"><div style="font-size:14px;font-weight:700;color:#0b2d4c;">Initializing map...</div><div style="font-size:12px;color:#000;">Please wait</div></div>
+      </div>
+
+      <aside id="info-panel" aria-label="Parcel information">
+        <div class="ip-head">Parcel Information</div>
+        <div class="ip-body" id="ip-basic"><div class="ip-empty">Load a parcel to view details.</div></div>
+        <div class="ip-head" id="ip-ca-head" style="display:none;">Critical Areas</div>
+        <div class="ip-body" id="ip-ca" style="display:none;"></div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<script src="js/core/drawing-mode.js"></script>
+<script src="js/core/measurement.js"></script>
+<script src="js/core/object-labels.js"></script>
+<script src="js/core/layers.js"></script>
+<script src="js/core/rotation-guides.js"></script>
+<script src="js/core/duplicate.js"></script>
+<script src="js/core/rotate.js"></script>
+<script src="js/ui/drawing-mode-toggle.js"></script>
+<script src="js/ui/layers-panel.js"></script>
+<script src="js/ui/zoom-control.js"></script>
+<script src="js/ui/home-button.js"></script>
+<script src="js/ui/scale-bar.js"></script>
+<script src="js/ui/north-arrow.js"></script>
+<script src="js/ui/attributions.js"></script>
+<script src="js/ui/map-controls.js"></script>
+<script src="js/ui/selection-toolbar.js"></script>
+<script src="js/ui/search.js"></script>
+<script src="js/ui/clear-drawings.js"></script>
+<script src="js/ui/disclaimer-modal.js"></script>
+<script src="js/ui/measurement-control.js"></script>
+<script src="js/ui/label-editor.js"></script>
+<script src="js/ui/parcel-info.js"></script>
+<script src="js/ui/esri-control-icons.js"></script>
+<script src="js/utils/polyline-tool.js"></script>
+<script src="js/utils/point-tool.js"></script>
+<script src="js/utils/rectangle-tool.js"></script>
+<script src="js/runtime.js"></script>
+<script src="js/tools-draw/draw-shared.js"></script>
+<script src="js/tools-draw/grading.js"></script>
+<script src="js/tools-draw/easement.js"></script>
+<script src="js/tools-draw/fence-line.js"></script>
+<script src="js/tools-draw/callout.js"></script>
+<script src="js/tools-draw/text.js"></script>
+<script src="js/tools-draw/index.js"></script>
+<script src="js/tools-structures/structures-shared.js"></script>
+<script src="js/tools-structures/structure.js"></script>
+<script src="js/tools-structures/setback.js"></script>
+<script src="js/tools-structures/index.js"></script>
+<script src="js/tools-parking/parking-shared.js"></script>
+<script src="js/tools-parking/standard-stall.js"></script>
+<script src="js/tools-parking/ev-stall.js"></script>
+<script src="js/tools-parking/ada-stall.js"></script>
+<script src="js/tools-parking/access-aisle.js"></script>
+<script src="js/tools-parking/index.js"></script>
+<script src="js/tools-access/access-shared.js"></script>
+<script src="js/tools-access/gravel.js"></script>
+<script src="js/tools-access/asphalt.js"></script>
+<script src="js/tools-access/driveway.js"></script>
+<script src="js/tools-access/culvert.js"></script>
+<script src="js/tools-access/index.js"></script>
+<script src="js/tools-well-septic/well-septic-shared.js"></script>
+<script src="js/tools-well-septic/well.js"></script>
+<script src="js/tools-well-septic/test-hole.js"></script>
+<script src="js/tools-well-septic/septic-tank.js"></script>
+<script src="js/tools-well-septic/dbox.js"></script>
+<script src="js/tools-well-septic/drainfield.js"></script>
+<script src="js/tools-well-septic/reserve-drainfield.js"></script>
+<script src="js/tools-well-septic/septic-line.js"></script>
+<script src="js/tools-well-septic/index.js"></script>
+<script src="js/tools-utilities/utilities-shared.js"></script>
+<script src="js/tools-utilities/water-line.js"></script>
+<script src="js/tools-utilities/irrigation-line.js"></script>
+<script src="js/tools-utilities/power-line.js"></script>
+<script src="js/tools-utilities/undergroundpower-line.js"></script>
+<script src="js/tools-utilities/gas-line.js"></script>
+<script src="js/tools-utilities/communication-line.js"></script>
+<script src="js/tools-utilities/ugcommunication-line.js"></script>
+<script src="js/tools-utilities/sanitarysewer-line.js"></script>
+<script src="js/tools-utilities/water-meter.js"></script>
+<script src="js/tools-utilities/utility-pole.js"></script>
+<script src="js/tools-utilities/index.js"></script>
+<!-- 11x17 PDF print workflow. -->
+<script src="js/print/print-core.js"></script>
+<script src="js/print/template.js"></script>
+<script src="js/print/print-svg.js"></script>
+<script src="js/print/legend.js"></script>
+<script src="js/print/print-dialog.js"></script>
+</body>
+</html>
