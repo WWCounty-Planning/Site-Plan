@@ -59,17 +59,21 @@ var SitePlanConfig = {
   },
 
   branding: {
-    countyName:    "Walla Walla County",
-    agencyName:    "Community Development",
-    toolTitle:     "Site Plan Builder",
-    printHeader:   "Walla Walla County — Permit Application Site Plan",
-    sealUrl:       "https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg",
-    parcelInfoUrl: "https://experience.arcgis.com/experience/7133ad29736547f2b24bbd0f1753bc24",
-    phone:         "509-524-2610",
-    email:         "commdev@wwcowa.gov",
-    address:       "310 W. Poplar Street, Suite 200 · Walla Walla, WA 99362",
-    formsUrl:      "https://www.wwcowa.gov/government/community_development/applications.php",
-    municodeUrl:   "https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT18EN_CH18.08CRARPR"
+    countyName:         "Walla Walla County",
+    agencyName:         "Community Development",
+    departmentFullName: "Walla Walla County Community Development Department",
+    directorName:       "Melissa Shumake",
+    toolTitle:          "Site Plan Builder",
+    printHeader:        "Walla Walla County — Permit Application Site Plan",
+    sealUrl:            "https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg",
+    parcelInfoUrl:      "https://experience.arcgis.com/experience/7133ad29736547f2b24bbd0f1753bc24",
+    phone:              "509-524-2610",
+    email:              "commdev@wwcowa.gov",
+    address:            "310 W. Poplar Street, Suite 200 · Walla Walla, WA 99362",
+    formsUrl:            "https://www.wwcowa.gov/government/community_development/applications.php#outer-7764",
+    applicationGuideUrl: "https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Guide%20-%20Complete%20Application.pdf?t=202601061827390&t=202601061827390",
+    assessorUrl:         "https://www.co.walla-walla.wa.us/departments/assessor/index.php",
+    municodeUrl:         "https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT18EN_CH18.08CRARPR"
   },
 
   ui: {

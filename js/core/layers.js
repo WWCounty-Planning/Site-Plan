@@ -1,4 +1,4 @@
-// Layer construction and draw-stack ordering.
+// js/core/layers.js
 (function () {
   'use strict';
 
@@ -9,6 +9,7 @@
   function create(options) {
     const FeatureLayer = options.FeatureLayer;
     const GraphicsLayer = options.GraphicsLayer;
+    const VectorTileLayer = options.VectorTileLayer;
     const cfg = options.cfg;
 
     const parcelLayer = new FeatureLayer({
@@ -25,13 +26,11 @@
       }
     });
 
-    const contourLayer = new FeatureLayer({
-      url: 'https://services8.arcgis.com/COL6rRPkF9w28VGX/arcgis/rest/services/Contours_10ft/FeatureServer/0',
+    const contourLayer = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/COL6rRPkF9w28VGX/arcgis/rest/services/10ft_Labeled_Contours/VectorTileServer',
       title: 'Contours',
       visible: false,
-      popupEnabled: false,
-      listMode: 'hide',
-      renderer: { type: 'simple', symbol: { type: 'simple-line', color: [120, 95, 65, 0.72], width: 0.8 } }
+      listMode: 'hide'
     });
 
     const liquefactionLayer = new FeatureLayer({

@@ -224,11 +224,23 @@
         <div id="loading"><div style="font-size:14px;font-weight:700;color:#0b2d4c;">Initializing map...</div><div style="font-size:12px;color:#000;">Please wait</div></div>
       </div>
 
-      <aside id="info-panel" aria-label="Parcel information">
-        <div class="ip-head">Parcel Information</div>
-        <div class="ip-body" id="ip-basic"><div class="ip-empty">Load a parcel to view details.</div></div>
-        <div class="ip-head" id="ip-ca-head" style="display:none;">Critical Areas</div>
-        <div class="ip-body" id="ip-ca" style="display:none;"></div>
+      <aside id="info-panel" aria-label="Parcel information and help">
+        <div class="ip-head ip-head-tabs" role="tablist" aria-label="Sidebar panel">
+          <button type="button" class="sidebar-panel-seg active" id="tab-parcel-info" role="tab"
+                  aria-selected="true" aria-controls="info-panel-parcel" onclick="showSidebarPanel('parcel')">
+            Parcel Information
+          </button>
+          <button type="button" class="sidebar-panel-seg" id="tab-help-guide" role="tab"
+                  aria-selected="false" aria-controls="info-panel-help" onclick="showSidebarPanel('help')">
+            Help Guide
+          </button>
+        </div>
+        <div id="info-panel-parcel" role="tabpanel" aria-labelledby="tab-parcel-info">
+          <div class="ip-body" id="ip-basic"><div class="ip-empty">Load a parcel to view details.</div></div>
+          <div class="ip-head" id="ip-ca-head" style="display:none;">Critical Areas</div>
+          <div class="ip-body" id="ip-ca" style="display:none;"></div>
+        </div>
+        <div id="info-panel-help" role="tabpanel" aria-labelledby="tab-help-guide" hidden></div>
       </aside>
     </div>
   </main>
@@ -256,6 +268,7 @@
 <script src="js/ui/measurement-control.js"></script>
 <script src="js/ui/label-editor.js"></script>
 <script src="js/ui/parcel-info.js"></script>
+<script src="js/ui/help-guide.js"></script>
 <script src="js/ui/esri-control-icons.js"></script>
 <script src="js/utils/polyline-tool.js"></script>
 <script src="js/utils/point-tool.js"></script>

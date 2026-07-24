@@ -10,7 +10,7 @@
     contours: {
       credit: 'Washington State DNR (Contours)',
       printCredit: 'DNR Contours',
-      serviceUrl: SERVICE_BASE + '/Contours_10ft/FeatureServer/0'
+      serviceUrl: 'https://tiles.arcgis.com/tiles/COL6rRPkF9w28VGX/arcgis/rest/services/10ft_Labeled_Contours/VectorTileServer'
     },
     liquefaction: {
       credit: null,

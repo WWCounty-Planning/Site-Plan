@@ -10,12 +10,12 @@
 
   require([
     'esri/Map', 'esri/views/MapView',
-    'esri/layers/FeatureLayer', 'esri/layers/GraphicsLayer',
+    'esri/layers/FeatureLayer', 'esri/layers/GraphicsLayer', 'esri/layers/VectorTileLayer',
     'esri/Graphic', 'esri/widgets/Home', 'esri/widgets/ScaleBar',
     'esri/widgets/Search', 'esri/widgets/Attribution', 'esri/widgets/Sketch', 'esri/geometry/geometryEngine', 'esri/Viewpoint'
   ], function (
     EsriMap, MapView,
-    FeatureLayer, GraphicsLayer,
+    FeatureLayer, GraphicsLayer, VectorTileLayer,
     Graphic, Home, ScaleBar,
     Search, Attribution, Sketch, geometryEngine, Viewpoint
   ) {
@@ -41,6 +41,7 @@
     const layers = window.SitePlanLayers.create({
       FeatureLayer,
       GraphicsLayer,
+      VectorTileLayer,
       cfg
     });
     const {
@@ -113,7 +114,7 @@
       return graphic;
     }
 
-    // opt out of controls such as label, rotate, or resize without hard-coding, etc
+    // opt out of controls such as label, rotate, or resize without hard-coding
     const DEFAULT_GRAPHIC_CAPABILITIES = {
       reshape: true,
       resize: true,
@@ -434,7 +435,7 @@
         preferred === 'rotate' ||
         (caps.reshape === false && effectiveMode === 'resize');
       if (effectiveMode === selectedEditMode) {
-        // exposes the active tool and it is not the graphic's required mode
+        // exposes the active tool and it is not the graphic's required mode,
         if (requiresTransform && caps.resize === false) return true;
         const tool = String(event.tool || '').toLowerCase();
         if (effectiveMode === 'reshape') return !!(tool && tool !== 'reshape');
