@@ -72,6 +72,7 @@ var SitePlanConfig = {
     address:            "310 W. Poplar Street, Suite 200 · Walla Walla, WA 99362",
     formsUrl:            "https://www.wwcowa.gov/government/community_development/applications.php#outer-7764",
     applicationGuideUrl: "https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Guide%20-%20Complete%20Application.pdf?t=202601061827390&t=202601061827390",
+    siteplanChecklistUrl: "https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Site%20Plan.pdf",
     assessorUrl:         "https://www.co.walla-walla.wa.us/departments/assessor/index.php",
     municodeUrl:         "https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT18EN_CH18.08CRARPR"
   },

@@ -10,10 +10,15 @@
   }
 
   function stepsSection() {
+    const b = branding();
     const wrap = document.createElement('div');
     wrap.className = 'help-block';
     wrap.innerHTML =
       '<div class="help-subhead">Getting Started</div>' +
+
+      '<p>Review our <a href="' + (b.siteplanChecklistUrl || '#') + '" target="_blank" rel="noopener noreferrer">Site Plan Checklist</a>. ' +
+        'All items listed on the checklist are required to be shown unless they do not exist on the site. ' +
+        'Incomplete site plans may increase review time, or require resubmittal.</p>' +
 
       '<div class="help-step">' +
         '<div class="help-step-title">1. Select a Property</div>' +
