@@ -106,6 +106,7 @@
     let selectedEditMode = 'resize';
     let userPreferredEditMode = 'resize';
     let selectedGraphic = null;
+    let parcelSelectionTool = null;
     let sitePlanGraphicCounter = 1;
     let preferredEditRestartInProgress = false;
 
@@ -515,7 +516,7 @@
     window.deleteSelected = function () {
       if (!selectedGraphic || getGraphicCapabilities(selectedGraphic).delete === false) return;
       const g = selectedGraphic;
-      // Suppress side-label recreation during teardown
+      // Suppress side-label recreation during teardown: sketch.cancel() can fire
       g.__skipEdgeLabels = true;
       g.__skipSideLabels = true;
       try { if (sketch && sketch.state !== 'idle') sketch.cancel(); } catch (err) {}
@@ -534,6 +535,7 @@
     }
 
     view.on('click', event => {
+      if (parcelSelectionTool && parcelSelectionTool.isActive()) return;
       if (measureSketch && measureSketch.state === 'active') return;
 
       const sketchIsActive = !!(sketch && sketch.state === 'active');
@@ -775,13 +777,27 @@
       highlightLayer, homeButton, Viewpoint
     });
 
+    parcelSelectionTool = window.SitePlanParcelSelectionTool.create({
+      view,
+      parcelLayer,
+      activateParcelFeature: parcelInfoUi.activateParcelFeature,
+      clearDrawingSelection: clearSelection,
+      cancelMainSketch: () => {
+        try { if (sketch && sketch.state !== 'idle') sketch.cancel(); } catch (err) {}
+      },
+      cancelMeasurement: measureControl.cancelActiveMeasurement,
+      setSketchGraphicClickEnabled: enabled => {
+        sketch.updateOnGraphicClick = !!enabled;
+      },
+      mapWrap: document.getElementById('map-wrap')
+    });
+
     const parcelSearchUi = window.SitePlanSearch.create({
       Search,
       view,
       parcelLayer,
       pf,
-      setActiveParcel: parcelInfoUi.setActiveParcel,
-      fetchFeatureInViewSpatialReference: parcelInfoUi.fetchFeatureInViewSpatialReference
+      activateParcelFeature: parcelInfoUi.activateParcelFeature
     });
 
     window.printPlan = function () {
@@ -854,6 +870,8 @@
       sketch,
       get activeParcelGeometry() { return parcelInfoUi.activeParcelGeometry; },
       get activeParcelAttributes() { return parcelInfoUi.activeParcelAttributes; },
+      parcelSelectionTool,
+      activateParcelFeature: parcelInfoUi.activateParcelFeature,
       clearDrawings: performClearAll,
       clearTemporaryMeasurements: measureControl.clearTemporaryMeasurements,
       clearSelection,

@@ -166,6 +166,11 @@
       }).catch(() => feature);
     }
 
+    function activateParcelFeature(feature, opts) {
+      return fetchFeatureInViewSpatialReference(feature)
+        .then(resolvedFeature => setActiveParcel(resolvedFeature, opts));
+    }
+
     function setCountyHomeExtent() {
       return parcelLayer.when(() => {
         const countyExtent = parcelLayer.fullExtent;
@@ -179,6 +184,7 @@
 
     return {
       setActiveParcel,
+      activateParcelFeature,
       loadParcelByGeo,
       fetchFeatureInViewSpatialReference,
       setCountyHomeExtent,

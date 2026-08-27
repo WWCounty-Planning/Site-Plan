@@ -58,7 +58,23 @@
       toggle.classList.toggle('active', !!activeMeasureMode);
     }
 
+    function announceActivation(mode) {
+      try {
+        window.dispatchEvent(new CustomEvent('siteplan:tool-activated', {
+          detail: { source: 'measurement-control', tool: 'measure-' + mode }
+        }));
+      } catch (err) {}
+    }
+
+    function cancelActiveMeasurement() {
+      try { if (measureSketch && measureSketch.state !== 'idle') measureSketch.cancel(); } catch (err) {}
+      activeMeasureMode = null;
+      mu.clearLiveMeasurePreview();
+      updateButtons();
+    }
+
     function startMeasureMode(mode) {
+      announceActivation(mode);
       clearSelection();
       cancelMainSketch();
       try { if (measureSketch && measureSketch.state !== 'idle') measureSketch.cancel(); } catch (err) {}
@@ -72,10 +88,8 @@
     }
 
     function clearTemporaryMeasurements() {
-      try { if (measureSketch && measureSketch.state !== 'idle') measureSketch.cancel(); } catch (err) {}
-      activeMeasureMode = null;
+      cancelActiveMeasurement();
       measureLayer.removeAll();
-      mu.clearLiveMeasurePreview();
       updateButtons();
     }
 
@@ -126,11 +140,21 @@
     areaRow.addEventListener('click',     e => { stop(e); startMeasureMode('area'); });
     clearBtn.addEventListener('click',    e => { stop(e); clearTemporaryMeasurements(); });
 
+    window.addEventListener('siteplan:tool-activated', event => {
+      const detail = event && event.detail ? event.detail : {};
+      if (detail.source === 'measurement-control') return;
+      cancelActiveMeasurement();
+    });
+
     // Mount and initialise button state.
     view.ui.add(control, 'top-left');
     updateButtons();
 
-    return { clearTemporaryMeasurements };
+    return {
+      clearTemporaryMeasurements,
+      cancelActiveMeasurement,
+      isActive: () => !!activeMeasureMode
+    };
   }
 
   window.SitePlanMeasurementControl = { create };

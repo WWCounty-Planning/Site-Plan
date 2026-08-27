@@ -6,8 +6,7 @@
     const view = options.view;
     const parcelLayer = options.parcelLayer;
     const pf = options.pf || {};
-    const setActiveParcel = options.setActiveParcel;
-    const fetchFeatureInViewSpatialReference = options.fetchFeatureInViewSpatialReference;
+    const activateParcelFeature = options.activateParcelFeature;
 
     let parcelSearch = null;
 
@@ -117,8 +116,7 @@
         const feature = event.result && event.result.feature;
         if (!feature) return;
 
-        fetchFeatureInViewSpatialReference(feature)
-          .then(setActiveParcel)
+        activateParcelFeature(feature)
           .then(() => {
             clearParcelSearchWidget();
           })
